@@ -10,3 +10,7 @@ pip install -r requirements.txt
 ```bash
 python train_model.py
 ```
+
+## References
+[ImageFolder 사용법](https://computistics.tistory.com/7)
+[Pytorch model transfer learning](https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html)
