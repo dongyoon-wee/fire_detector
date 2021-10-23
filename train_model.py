@@ -1,4 +1,5 @@
 import os
+import argparse
 import torch
 import time
 import copy
@@ -8,6 +9,14 @@ from torch.optim import lr_scheduler
 from torchvision import datasets, models
 
 from transform import data_transforms
+
+
+parser = argparse.ArgumentParser(description='Arguments for training')
+parser.add_argument('--train_data_dir', default='', help='data folder path for inference')
+parser.add_argument('--val_data_dir', default='', help='data folder path for inference')
+parser.add_argument('--model_path', default='', help='model path to infer')
+
+args = parser.parse_args()
 
 
 def train_model(dataloaders, model, criterion, optimizer, scheduler, num_epochs=25):
@@ -83,14 +92,14 @@ if __name__=='__main__':
 
     #######################################
     # things to edit
-    train_data_dir = ''
-    val_data_dir = ''
+    train_data_dir = args.train_data_dir
+    val_data_dir = args.val_data_dir
     base_lr = 0.001
     momentum = 0.9
     decay_step = 7
     decay_gamma = 0.1
     num_epochs = 25
-    model_path = ''
+    model_path = args.model_path
 
     #######################################
 
