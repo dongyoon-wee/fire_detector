@@ -22,6 +22,15 @@ def infer_model(dataloader, model):
     print('Inference complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
 
 
+def infer_image(image, model, device):
+    input = data_transforms(image)
+    input = input.to(device)
+    with torch.set_grad_enabled(False):
+        outputs = model(input.unsqueeze(0))
+        _, preds = torch.max(outputs, 1)
+    return preds
+
+
 if __name__=='__main__':
 
     #######################################
