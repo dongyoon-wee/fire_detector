@@ -3,6 +3,7 @@ import torch
 import time
 import copy
 from torchvision import datasets, models
+from PIL import Image
 
 from transform import data_transforms
 
@@ -23,7 +24,7 @@ def infer_model(dataloader, model):
 
 
 def infer_image(image, model, device):
-    input = data_transforms(image)
+    input = data_transforms['val'](image)
     input = input.to(device)
     with torch.set_grad_enabled(False):
         outputs = model(input.unsqueeze(0))
@@ -36,6 +37,7 @@ if __name__=='__main__':
     #######################################
     # things to edit
     infer_data_dir = ''
+    infer_data_path = ''
     base_lr = 0.001
     momentum = 0.9
     decay_step = 7
@@ -59,4 +61,5 @@ if __name__=='__main__':
     model_ft.load_state_dict(torch.load(model_path))
     model_ft = model_ft.to(device)
 
-    model_ft = infer_model(dataloader, model_ft)
+    #model_ft = infer_model(dataloader, model_ft)
+    preds = infer_image(Image.open(infer_data_path), model_ft, device)
