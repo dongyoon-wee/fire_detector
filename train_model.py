@@ -90,6 +90,7 @@ if __name__=='__main__':
     decay_step = 7
     decay_gamma = 0.1
     num_epochs = 25
+    model_path = ''
 
     #######################################
 
@@ -121,4 +122,5 @@ if __name__=='__main__':
     # Decay LR by a factor of 0.1 every 7 epochs
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=decay_step, gamma=decay_gamma)
     model_ft = train_model(dataloaders, model_ft, criterion, optimizer_ft, exp_lr_scheduler, num_epochs=num_epochs)
+    torch.save(model_ft.state_dict(), model_path)
 
