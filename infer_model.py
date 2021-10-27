@@ -5,6 +5,7 @@ import os
 import copy
 import argparse
 from torchvision import datasets, models
+from torch.utils.data import Dataset
 from PIL import Image
 
 from transform import data_transforms
@@ -18,10 +19,27 @@ parser.add_argument('--model_path', default='', help='model path to infer')
 args = parser.parse_args()
 
 
+class ImgDataset(Dataset):
+
+    def __init__(self, data_dir, transform):
+        self.file_list = [os.path.join(data_dir, fname) for fname in os.listdir(data_dir)]
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.file_list)
+
+    def __getitem__(self, index):
+        img_path = self.file_list[index]
+        img = Image.open(img_path)
+        img_transformed = self.transform(img)
+
+        return img_transformed
+
+
 def infer_model(dataloader, model):
     since = time.time()
 
-    for inputs, labels in dataloader:
+    for inputs in dataloader:
         inputs = inputs.to(device)
         with torch.set_grad_enabled(False):
             outputs = model(inputs)
@@ -64,8 +82,8 @@ if __name__=='__main__':
 
     if os.path.isdir(infer_data_dir):
         print("infer from {}".format(infer_data_dir))
-        image_dataset = datasets.ImageFolder(infer_data_dir, data_transforms['val'])
-        dataloader = torch.utils.data.DataLoader(image_dataset, batch_size=1, shuffle=False, num_workers=4)
+        image_dataset = ImgDataset(infer_data_dir, data_transforms['val'])
+        dataloader = torch.utils.data.DataLoader(image_dataset, batch_size=1, shuffle=False, num_workers=0)
 
         infer_model(dataloader, model_ft)
 
